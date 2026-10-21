@@ -3,6 +3,12 @@
     <a class="navbar-brand" routerLink="/">Mi Tienda</a>
     <div class="ms-auto d-flex gap-2">
       <a class="btn btn-outline-light" routerLink="/productos">Productos</a>
+      <a class="btn btn-outline-light position-relative" routerLink="/carrito">
+        <i class="bi bi-cart"></i> Carrito
+        @if (cart.count() > 0) {
+          <span class="badge rounded-pill bg-danger ms-1">{{ cart.count() }}</span>
+        }
+      </a>
       <a class="btn btn-outline-light" routerLink="/login">Iniciar sesión</a>
     </div>
   </div>
