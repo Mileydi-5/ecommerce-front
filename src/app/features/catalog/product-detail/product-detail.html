@@ -1,0 +1,43 @@
+<a routerLink="/productos" class="btn btn-link mb-3">← Volver al catálogo</a>
+
+@if (product) {
+  <div class="row g-4">
+    <div class="col-md-6">
+      <img [src]="product.imageUrl" [alt]="product.name" class="img-fluid rounded shadow-sm" />
+    </div>
+    <div class="col-md-6">
+      <span class="badge bg-secondary mb-2">{{ product.category }}</span>
+      <h2>{{ product.name }}</h2>
+      <p class="text-muted">{{ product.description }}</p>
+      <p class="fs-3 fw-bold">{{ product.price | currency: 'GTQ' : 'Q' }}</p>
+
+      @if (product.sizes) {
+        <label class="form-label fw-semibold">Talla</label>
+        <select class="form-select mb-3">
+          @for (s of product.sizes; track s) {
+            <option>{{ s }}</option>
+          }
+        </select>
+      }
+
+      @if (product.colors) {
+        <label class="form-label fw-semibold">Color</label>
+        <select class="form-select mb-3">
+          @for (c of product.colors; track c) {
+            <option>{{ c }}</option>
+          }
+        </select>
+      }
+
+      @if (product.stock > 0) {
+        <p class="text-success">Disponible: {{ product.stock }} unidades</p>
+        <button class="btn btn-primary btn-lg">Agregar al carrito</button>
+      } @else {
+        <p class="text-danger">Producto agotado</p>
+        <button class="btn btn-secondary btn-lg" disabled>No disponible</button>
+      }
+    </div>
+  </div>
+} @else {
+  <div class="alert alert-warning">Producto no encontrado.</div>
+}

@@ -14,6 +14,8 @@ export class ProductService {
       imageUrl: 'https://picsum.photos/seed/camiseta/400/300',
       category: 'Ropa',
       stock: 25,
+            sizes: ['S', 'M', 'L', 'XL'],
+      colors: ['Blanco', 'Negro', 'Azul'],
     },
     {
       id: 2,
@@ -32,10 +34,14 @@ export class ProductService {
       imageUrl: 'https://picsum.photos/seed/mochila/400/300',
       category: 'Accesorios',
       stock: 0,
+      colors: ['Negro', 'Gris'],
     },
   ];
 
   getAll(): Product[] {
     return this.products;
+  }
+    getById(id: number): Product | undefined {
+    return this.products.find((p) => p.id === id);
   }
 }

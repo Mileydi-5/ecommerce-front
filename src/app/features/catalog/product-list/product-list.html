@@ -7,7 +7,9 @@
         <img [src]="p.imageUrl" class="card-img-top" [alt]="p.name" />
         <div class="card-body d-flex flex-column">
           <span class="badge bg-secondary align-self-start mb-2">{{ p.category }}</span>
-          <h5 class="card-title">{{ p.name }}</h5>
+          <h5 class="card-title">
+            <a [routerLink]="['/productos', p.id]" class="text-decoration-none text-dark stretched-link">{{ p.name }}</a>
+          </h5>
           <p class="card-text text-muted">{{ p.description }}</p>
           <div class="mt-auto">
             <p class="fs-5 fw-bold mb-2">{{ p.price | currency: 'GTQ' : 'Q' }}</p>
