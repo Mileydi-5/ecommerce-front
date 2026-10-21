@@ -1,15 +1,22 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
   <div class="container">
     <a class="navbar-brand" routerLink="/">Mi Tienda</a>
-    <div class="ms-auto d-flex gap-2">
+    <div class="ms-auto d-flex gap-2 align-items-center">
       <a class="btn btn-outline-light" routerLink="/productos">Productos</a>
-      <a class="btn btn-outline-light position-relative" routerLink="/carrito">
+      <a class="btn btn-outline-light" routerLink="/carrito">
         <i class="bi bi-cart"></i> Carrito
         @if (cart.count() > 0) {
           <span class="badge rounded-pill bg-danger ms-1">{{ cart.count() }}</span>
         }
       </a>
-      <a class="btn btn-outline-light" routerLink="/login">Iniciar sesión</a>
+
+      @if (auth.isLoggedIn()) {
+        <span class="text-white small">Hola, {{ auth.user()?.name }}</span>
+        <button class="btn btn-light" (click)="logout()">Cerrar sesión</button>
+      } @else {
+        <a class="btn btn-outline-light" routerLink="/login">Iniciar sesión</a>
+        <a class="btn btn-light" routerLink="/registro">Registrarse</a>
+      }
     </div>
   </div>
 </nav>
