@@ -11,10 +11,10 @@ export class ProductService {
       name: 'Camiseta básica',
       description: 'Camiseta de algodón, cómoda y fresca.',
       price: 89.9,
-      imageUrl: 'https://picsum.photos/seed/camiseta/400/300',
+      imageUrl: 'images/camiseta.jpg',
       category: 'Ropa',
       stock: 25,
-            sizes: ['S', 'M', 'L', 'XL'],
+      sizes: ['S', 'M', 'L', 'XL'],
       colors: ['Blanco', 'Negro', 'Azul'],
     },
     {
@@ -22,7 +22,7 @@ export class ProductService {
       name: 'Audífonos Bluetooth',
       description: 'Audífonos inalámbricos con 20 horas de batería.',
       price: 249.0,
-      imageUrl: 'https://picsum.photos/seed/audifonos/400/300',
+      imageUrl: 'images/audifonos.jpg',
       category: 'Electrónica',
       stock: 10,
     },
@@ -31,7 +31,7 @@ export class ProductService {
       name: 'Mochila urbana',
       description: 'Mochila resistente con espacio para laptop.',
       price: 179.5,
-      imageUrl: 'https://picsum.photos/seed/mochila/400/300',
+      imageUrl: 'images/mochila.jpg',
       category: 'Accesorios',
       stock: 0,
       colors: ['Negro', 'Gris'],
@@ -41,7 +41,8 @@ export class ProductService {
   getAll(): Product[] {
     return this.products;
   }
-    getById(id: number): Product | undefined {
+
+  getById(id: number): Product | undefined {
     return this.products.find((p) => p.id === id);
   }
 }
