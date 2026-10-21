@@ -1,1 +1,24 @@
-<p>product-list works!</p>
+<h2 class="mb-4">Catálogo de productos</h2>
+
+<div class="row g-4">
+  @for (p of products; track p.id) {
+    <div class="col-12 col-sm-6 col-lg-4">
+      <div class="card h-100 shadow-sm">
+        <img [src]="p.imageUrl" class="card-img-top" [alt]="p.name" />
+        <div class="card-body d-flex flex-column">
+          <span class="badge bg-secondary align-self-start mb-2">{{ p.category }}</span>
+          <h5 class="card-title">{{ p.name }}</h5>
+          <p class="card-text text-muted">{{ p.description }}</p>
+          <div class="mt-auto">
+            <p class="fs-5 fw-bold mb-2">{{ p.price | currency: 'GTQ' : 'Q' }}</p>
+            @if (p.stock > 0) {
+              <span class="text-success small">Disponible ({{ p.stock }})</span>
+            } @else {
+              <span class="text-danger small">Agotado</span>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+</div>
