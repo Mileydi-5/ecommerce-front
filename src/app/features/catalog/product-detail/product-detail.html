@@ -31,7 +31,12 @@
 
       @if (product.stock > 0) {
         <p class="text-success">Disponible: {{ product.stock }} unidades</p>
-        <button class="btn btn-primary btn-lg">Agregar al carrito</button>
+        <button class="btn btn-primary btn-lg" (click)="addToCart()">Agregar al carrito</button>
+        @if (added) {
+          <div class="alert alert-success mt-3">
+            Producto agregado. <a routerLink="/carrito">Ver carrito</a>
+          </div>
+        }
       } @else {
         <p class="text-danger">Producto agotado</p>
         <button class="btn btn-secondary btn-lg" disabled>No disponible</button>
