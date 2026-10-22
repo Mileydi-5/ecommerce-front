@@ -52,7 +52,7 @@
     <button class="btn btn-outline-secondary" (click)="cart.clear()">Vaciar carrito</button>
     <div class="text-end">
       <p class="fs-4 mb-2">Total: <strong>{{ cart.total() | currency: 'GTQ' : 'Q' }}</strong></p>
-      <button class="btn btn-success btn-lg">Continuar con la compra</button>
+      <a routerLink="/checkout" class="btn btn-success btn-lg">Continuar con la compra</a>
     </div>
   </div>
 }

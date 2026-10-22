@@ -1,0 +1,102 @@
+<h2 class="mb-4">Finalizar compra</h2>
+
+@if (cart.items().length === 0) {
+  <div class="alert alert-info">
+    Tu carrito está vacío. <a routerLink="/productos">Ir al catálogo</a>
+  </div>
+} @else {
+  <form [formGroup]="form" (ngSubmit)="confirm()">
+    <div class="row g-4">
+      <div class="col-lg-7">
+        <div class="card shadow-sm mb-4">
+          <div class="card-body">
+            <h5 class="mb-3">1. Dirección de envío</h5>
+
+            <div class="mb-3">
+              <label class="form-label">Nombre completo</label>
+              <input type="text" class="form-control" formControlName="fullName" />
+              @if (form.controls.fullName.touched && form.controls.fullName.invalid) {
+                <div class="text-danger small">Ingresa tu nombre completo.</div>
+              }
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Teléfono</label>
+              <input type="text" class="form-control" formControlName="phone" placeholder="8 dígitos" />
+              @if (form.controls.phone.touched && form.controls.phone.invalid) {
+                <div class="text-danger small">Ingresa un teléfono de 8 dígitos.</div>
+              }
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Dirección</label>
+              <input type="text" class="form-control" formControlName="address" />
+              @if (form.controls.address.touched && form.controls.address.invalid) {
+                <div class="text-danger small">Ingresa tu dirección.</div>
+              }
+            </div>
+
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Ciudad</label>
+                <input type="text" class="form-control" formControlName="city" />
+                @if (form.controls.city.touched && form.controls.city.invalid) {
+                  <div class="text-danger small">Campo requerido.</div>
+                }
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Departamento</label>
+                <input type="text" class="form-control" formControlName="department" />
+                @if (form.controls.department.touched && form.controls.department.invalid) {
+                  <div class="text-danger small">Campo requerido.</div>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card shadow-sm">
+          <div class="card-body">
+            <h5 class="mb-3">2. Método de pago</h5>
+
+            <div class="form-check mb-2">
+              <input class="form-check-input" type="radio" id="pay1" value="tarjeta" formControlName="paymentMethod" />
+              <label class="form-check-label" for="pay1">Tarjeta de crédito o débito</label>
+            </div>
+            <div class="form-check mb-2">
+              <input class="form-check-input" type="radio" id="pay2" value="transferencia" formControlName="paymentMethod" />
+              <label class="form-check-label" for="pay2">Transferencia bancaria</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" id="pay3" value="contra entrega" formControlName="paymentMethod" />
+              <label class="form-check-label" for="pay3">Pago contra entrega</label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-5">
+        <div class="card shadow-sm">
+          <div class="card-body">
+            <h5 class="mb-3">3. Resumen del pedido</h5>
+
+            @for (item of cart.items(); track item.product.id) {
+              <div class="d-flex justify-content-between mb-2">
+                <span>{{ item.quantity }} × {{ item.product.name }}</span>
+                <span>{{ item.product.price * item.quantity | currency: 'GTQ' : 'Q' }}</span>
+              </div>
+            }
+
+            <hr />
+            <div class="d-flex justify-content-between fs-5 fw-bold mb-3">
+              <span>Total</span>
+              <span>{{ cart.total() | currency: 'GTQ' : 'Q' }}</span>
+            </div>
+
+            <button type="submit" class="btn btn-success btn-lg w-100">Confirmar pedido</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+}
