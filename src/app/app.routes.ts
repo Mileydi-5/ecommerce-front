@@ -8,6 +8,7 @@ import { Cart } from './features/cart/cart/cart';
 import { Checkout } from './features/checkout/checkout/checkout';
 import { OrderSuccess } from './features/checkout/order-success/order-success';
 import { MyOrders } from './features/orders/my-orders/my-orders';
+import { Profile } from './features/profile/profile/profile';
 import { authGuard } from './core/guards/auth-guard';
 
 export const routes: Routes = [
@@ -21,4 +22,5 @@ export const routes: Routes = [
   { path: 'checkout', component: Checkout, canActivate: [authGuard] },
   { path: 'pedido-confirmado/:id', component: OrderSuccess, canActivate: [authGuard] },
   { path: 'mis-pedidos', component: MyOrders, canActivate: [authGuard] },
+  { path: 'perfil', component: Profile, canActivate: [authGuard] },
 ];

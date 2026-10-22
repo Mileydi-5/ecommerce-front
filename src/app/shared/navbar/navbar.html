@@ -12,7 +12,9 @@
 
       @if (auth.isLoggedIn()) {
         <a class="btn btn-outline-light" routerLink="/mis-pedidos">Mis pedidos</a>
-        <span class="text-white small">Hola, {{ auth.user()?.name }}</span>
+        <a class="btn btn-outline-light" routerLink="/perfil">
+          <i class="bi bi-person"></i> {{ auth.user()?.name }}
+        </a>
         <button class="btn btn-light" (click)="logout()">Cerrar sesión</button>
       } @else {
         <a class="btn btn-outline-light" routerLink="/login">Iniciar sesión</a>

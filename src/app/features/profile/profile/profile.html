@@ -1,0 +1,119 @@
+<h2 class="mb-4">Mi perfil</h2>
+
+<ul class="nav nav-tabs mb-4">
+  <li class="nav-item">
+    <button class="nav-link" [class.active]="tab() === 'datos'" (click)="tab.set('datos')">Mis datos</button>
+  </li>
+  <li class="nav-item">
+    <button class="nav-link" [class.active]="tab() === 'direcciones'" (click)="tab.set('direcciones')">Direcciones</button>
+  </li>
+  <li class="nav-item">
+    <button class="nav-link" [class.active]="tab() === 'pagos'" (click)="tab.set('pagos')">Métodos de pago</button>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" routerLink="/mis-pedidos">Historial de compras</a>
+  </li>
+</ul>
+
+@if (tab() === 'datos') {
+  <div class="card shadow-sm" style="max-width: 500px">
+    <div class="card-body">
+      <p class="mb-2"><strong>Nombre:</strong> {{ auth.user()?.name }}</p>
+      <p class="mb-2"><strong>Correo:</strong> {{ auth.user()?.email }}</p>
+      <p class="mb-0"><strong>Tipo de usuario:</strong> {{ auth.user()?.role }}</p>
+    </div>
+  </div>
+}
+
+@if (tab() === 'direcciones') {
+  <div class="row g-4">
+    <div class="col-md-6">
+      <h5>Mis direcciones</h5>
+      @if (addresses().length === 0) {
+        <div class="alert alert-info">No has guardado direcciones.</div>
+      }
+      @for (a of addresses(); track $index) {
+        <div class="card mb-2">
+          <div class="card-body d-flex justify-content-between align-items-center">
+            <div>
+              <strong>{{ a.label }}</strong><br />
+              <span class="text-muted small">{{ a.address }}, {{ a.city }}, {{ a.department }}</span>
+            </div>
+            <button class="btn btn-outline-danger btn-sm" (click)="removeAddress($index)">
+              <i class="bi bi-trash"></i>
+            </button>
+          </div>
+        </div>
+      }
+    </div>
+
+    <div class="col-md-6">
+      <h5>Agregar dirección</h5>
+      <form [formGroup]="addressForm" (ngSubmit)="addAddress()">
+        <div class="mb-2">
+          <input class="form-control" placeholder="Nombre (Casa, Trabajo...)" formControlName="label" />
+        </div>
+        <div class="mb-2">
+          <input class="form-control" placeholder="Dirección" formControlName="address" />
+        </div>
+        <div class="mb-2">
+          <input class="form-control" placeholder="Ciudad" formControlName="city" />
+        </div>
+        <div class="mb-2">
+          <input class="form-control" placeholder="Departamento" formControlName="department" />
+        </div>
+        @if (addressForm.touched && addressForm.invalid) {
+          <div class="text-danger small mb-2">Completa todos los campos.</div>
+        }
+        <button type="submit" class="btn btn-primary">Guardar dirección</button>
+      </form>
+    </div>
+  </div>
+}
+
+@if (tab() === 'pagos') {
+  <div class="row g-4">
+    <div class="col-md-6">
+      <h5>Mis métodos de pago</h5>
+      @if (payments().length === 0) {
+        <div class="alert alert-info">No has guardado métodos de pago.</div>
+      }
+      @for (p of payments(); track $index) {
+        <div class="card mb-2">
+          <div class="card-body d-flex justify-content-between align-items-center">
+            <div>
+              <strong class="text-capitalize">{{ p.type }}</strong><br />
+              <span class="text-muted small">{{ p.detail }}</span>
+            </div>
+            <button class="btn btn-outline-danger btn-sm" (click)="removePayment($index)">
+              <i class="bi bi-trash"></i>
+            </button>
+          </div>
+        </div>
+      }
+    </div>
+
+    <div class="col-md-6">
+      <h5>Agregar método de pago</h5>
+      <form [formGroup]="paymentForm" (ngSubmit)="addPayment()">
+        <div class="mb-2">
+          <select class="form-select" formControlName="type">
+            <option value="tarjeta">Tarjeta</option>
+            <option value="transferencia">Transferencia</option>
+            <option value="contra entrega">Contra entrega</option>
+          </select>
+        </div>
+        <div class="mb-2">
+          <input class="form-control" placeholder="Detalle (ej. Visa terminada en 4242)" formControlName="detail" />
+        </div>
+        @if (paymentForm.touched && paymentForm.invalid) {
+          <div class="text-danger small mb-2">Escribe un detalle.</div>
+        }
+        <button type="submit" class="btn btn-primary">Guardar método</button>
+      </form>
+      <p class="small text-muted mt-2">
+        Por seguridad, no guardes números completos de tarjeta; solo una referencia.
+      </p>
+    </div>
+  </div>
+}
