@@ -1,0 +1,23 @@
+<h2 class="mb-4">Panel de administración</h2>
+<p class="text-muted">Bienvenida, {{ auth.user()?.name }}.</p>
+
+<div class="row g-3">
+  <div class="col-sm-6">
+    <div class="card shadow-sm text-center">
+      <div class="card-body">
+        <i class="bi bi-box-seam fs-1 text-primary"></i>
+        <h3 class="mb-0">{{ productCount }}</h3>
+        <p class="text-muted mb-0">Productos</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-6">
+    <div class="card shadow-sm text-center">
+      <div class="card-body">
+        <i class="bi bi-receipt fs-1 text-success"></i>
+        <h3 class="mb-0">{{ orderCount }}</h3>
+        <p class="text-muted mb-0">Pedidos</p>
+      </div>
+    </div>
+  </div>
+</div>

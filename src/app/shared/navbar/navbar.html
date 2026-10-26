@@ -11,6 +11,11 @@
       </a>
 
       @if (auth.isLoggedIn()) {
+        @if (auth.isAdmin()) {
+          <a class="btn btn-warning" routerLink="/admin">
+            <i class="bi bi-gear"></i> Administración
+          </a>
+        }
         <a class="btn btn-outline-light" routerLink="/mis-pedidos">Mis pedidos</a>
         <a class="btn btn-outline-light" routerLink="/perfil">
           <i class="bi bi-person"></i> {{ auth.user()?.name }}

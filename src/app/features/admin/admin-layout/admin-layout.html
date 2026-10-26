@@ -1,0 +1,26 @@
+<div class="row">
+  <aside class="col-md-3 col-lg-2 mb-4">
+    <div class="list-group shadow-sm">
+      <div class="list-group-item bg-dark text-white fw-bold">
+        <i class="bi bi-gear"></i> Administración
+      </div>
+      <a
+        class="list-group-item list-group-item-action"
+        routerLink="/admin"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+      >
+        <i class="bi bi-speedometer2"></i> Inicio
+      </a>
+      <span class="list-group-item text-muted"><i class="bi bi-box-seam"></i> Productos (próximamente)</span>
+      <span class="list-group-item text-muted"><i class="bi bi-tags"></i> Categorías (próximamente)</span>
+      <span class="list-group-item text-muted"><i class="bi bi-receipt"></i> Pedidos (próximamente)</span>
+      <span class="list-group-item text-muted"><i class="bi bi-people"></i> Usuarios (próximamente)</span>
+      <span class="list-group-item text-muted"><i class="bi bi-ticket-perforated"></i> Cupones (próximamente)</span>
+    </div>
+  </aside>
+
+  <section class="col-md-9 col-lg-10">
+    <router-outlet></router-outlet>
+  </section>
+</div>

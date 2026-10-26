@@ -9,7 +9,10 @@ import { Checkout } from './features/checkout/checkout/checkout';
 import { OrderSuccess } from './features/checkout/order-success/order-success';
 import { MyOrders } from './features/orders/my-orders/my-orders';
 import { Profile } from './features/profile/profile/profile';
+import { AdminLayout } from './features/admin/admin-layout/admin-layout';
+import { Dashboard } from './features/admin/dashboard/dashboard';
 import { authGuard } from './core/guards/auth-guard';
+import { adminGuard } from './core/guards/admin-guard';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'productos', pathMatch: 'full' },
@@ -23,4 +26,10 @@ export const routes: Routes = [
   { path: 'pedido-confirmado/:id', component: OrderSuccess, canActivate: [authGuard] },
   { path: 'mis-pedidos', component: MyOrders, canActivate: [authGuard] },
   { path: 'perfil', component: Profile, canActivate: [authGuard] },
+  {
+    path: 'admin',
+    component: AdminLayout,
+    canActivate: [adminGuard],
+    children: [{ path: '', component: Dashboard }],
+  },
 ];
