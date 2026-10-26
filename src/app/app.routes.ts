@@ -16,6 +16,7 @@ import { ProductForm } from './features/admin/product-form/product-form';
 import { CategoryAdmin } from './features/admin/category-admin/category-admin';
 import { OrderAdmin } from './features/admin/order-admin/order-admin';
 import { UserAdmin } from './features/admin/user-admin/user-admin';
+import { CouponAdmin } from './features/admin/coupon-admin/coupon-admin';
 import { authGuard } from './core/guards/auth-guard';
 import { adminGuard } from './core/guards/admin-guard';
 
@@ -43,6 +44,7 @@ export const routes: Routes = [
       { path: 'categorias', component: CategoryAdmin },
       { path: 'pedidos', component: OrderAdmin },
       { path: 'usuarios', component: UserAdmin },
+      { path: 'cupones', component: CouponAdmin },
     ],
   },
 ];

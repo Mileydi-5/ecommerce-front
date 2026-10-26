@@ -11,9 +11,21 @@ import { CartService } from '../../../core/services/cart';
 })
 export class Cart {
   cart = inject(CartService);
+  couponMessage = '';
+  couponOk = false;
 
   changeQuantity(productId: number, event: Event) {
     const value = Number((event.target as HTMLInputElement).value);
     this.cart.setQuantity(productId, value);
+  }
+
+  applyCoupon(code: string) {
+    this.couponOk = this.cart.applyCoupon(code);
+    this.couponMessage = this.couponOk ? 'Cupón aplicado.' : 'Cupón no válido o inactivo.';
+  }
+
+  removeCoupon() {
+    this.cart.removeCoupon();
+    this.couponMessage = '';
   }
 }

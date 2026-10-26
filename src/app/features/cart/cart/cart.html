@@ -48,9 +48,33 @@
     </table>
   </div>
 
-  <div class="d-flex justify-content-between align-items-center mt-4">
-    <button class="btn btn-outline-secondary" (click)="cart.clear()">Vaciar carrito</button>
-    <div class="text-end">
+  <div class="row mt-4 g-4">
+    <div class="col-md-6">
+      <label class="form-label fw-semibold">¿Tienes un cupón?</label>
+      @if (cart.coupon(); as c) {
+        <div class="alert alert-success d-flex justify-content-between align-items-center py-2">
+          <span>Cupón <strong>{{ c.code }}</strong> aplicado</span>
+          <button class="btn btn-sm btn-outline-secondary" (click)="removeCoupon()">Quitar</button>
+        </div>
+      } @else {
+        <div class="input-group">
+          <input #couponInput type="text" class="form-control text-uppercase" placeholder="Código del cupón" />
+          <button class="btn btn-outline-primary" type="button" (click)="applyCoupon(couponInput.value)">
+            Aplicar
+          </button>
+        </div>
+        @if (couponMessage && !couponOk) {
+          <div class="text-danger small mt-1">{{ couponMessage }}</div>
+        }
+      }
+      <button class="btn btn-outline-secondary mt-3" (click)="cart.clear()">Vaciar carrito</button>
+    </div>
+
+    <div class="col-md-6 text-end">
+      <p class="mb-1">Subtotal: {{ cart.subtotal() | currency: 'GTQ' : 'Q' }}</p>
+      @if (cart.discount() > 0) {
+        <p class="mb-1 text-success">Descuento: -{{ cart.discount() | currency: 'GTQ' : 'Q' }}</p>
+      }
       <p class="fs-4 mb-2">Total: <strong>{{ cart.total() | currency: 'GTQ' : 'Q' }}</strong></p>
       <a routerLink="/checkout" class="btn btn-success btn-lg">Continuar con la compra</a>
     </div>
