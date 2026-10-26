@@ -2,6 +2,7 @@ import { Component, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ProductService } from '../../../core/services/product';
+import { CategoryService } from '../../../core/services/category';
 
 @Component({
   selector: 'app-product-form',
@@ -13,6 +14,7 @@ export class ProductForm {
   private fb = inject(FormBuilder);
   private router = inject(Router);
   private productService = inject(ProductService);
+  categoryService = inject(CategoryService);
 
   private id = Number(inject(ActivatedRoute).snapshot.paramMap.get('id')) || null;
   isEdit = this.id !== null;

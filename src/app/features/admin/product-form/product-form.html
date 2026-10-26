@@ -35,9 +35,14 @@
     </div>
     <div class="col-md-4 mb-3">
       <label class="form-label">Categoría</label>
-      <input type="text" class="form-control" formControlName="category" />
+      <select class="form-select" formControlName="category">
+        <option value="">Selecciona...</option>
+        @for (c of categoryService.categories(); track c.id) {
+          <option [value]="c.name">{{ c.name }}</option>
+        }
+      </select>
       @if (form.controls.category.touched && form.controls.category.invalid) {
-        <div class="text-danger small">Campo requerido.</div>
+        <div class="text-danger small">Selecciona una categoría.</div>
       }
     </div>
   </div>
