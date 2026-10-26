@@ -43,4 +43,8 @@ export class OrderService {
   getByUser(email: string): Order[] {
     return this._orders().filter((o) => o.userEmail === email);
   }
+
+  updateStatus(id: number, status: OrderStatus) {
+    this._orders.set(this._orders().map((o) => (o.id === id ? { ...o, status } : o)));
+  }
 }

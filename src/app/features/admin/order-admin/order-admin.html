@@ -1,0 +1,47 @@
+<h2 class="mb-4">Pedidos</h2>
+
+@if (message()) {
+  <div class="alert alert-success">{{ message() }}</div>
+}
+
+@if (orderService.orders().length === 0) {
+  <div class="alert alert-info">Todavía no hay pedidos.</div>
+} @else {
+  <div class="table-responsive">
+    <table class="table table-hover align-middle">
+      <thead>
+        <tr>
+          <th>Pedido</th>
+          <th>Fecha</th>
+          <th>Cliente</th>
+          <th>Total</th>
+          <th>Pago</th>
+          <th>Estado</th>
+          <th style="width: 170px">Cambiar estado</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (o of orderService.orders(); track o.id) {
+          <tr>
+            <td class="fw-semibold">#{{ o.id }}</td>
+            <td>{{ o.date | date: 'dd/MM/yyyy HH:mm' }}</td>
+            <td>
+              {{ o.address.fullName }}<br />
+              <span class="text-muted small">{{ o.userEmail }}</span>
+            </td>
+            <td>{{ o.total | currency: 'GTQ' : 'Q' }}</td>
+            <td class="text-capitalize">{{ o.paymentMethod }}</td>
+            <td><span class="badge" [class]="badgeClass(o.status)">{{ o.status }}</span></td>
+            <td>
+              <select class="form-select form-select-sm" [value]="o.status" (change)="changeStatus(o.id, $event)">
+                @for (s of statuses; track s) {
+                  <option [value]="s">{{ s }}</option>
+                }
+              </select>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+}

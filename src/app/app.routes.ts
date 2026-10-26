@@ -14,6 +14,7 @@ import { Dashboard } from './features/admin/dashboard/dashboard';
 import { ProductAdmin } from './features/admin/product-admin/product-admin';
 import { ProductForm } from './features/admin/product-form/product-form';
 import { CategoryAdmin } from './features/admin/category-admin/category-admin';
+import { OrderAdmin } from './features/admin/order-admin/order-admin';
 import { authGuard } from './core/guards/auth-guard';
 import { adminGuard } from './core/guards/admin-guard';
 
@@ -39,6 +40,7 @@ export const routes: Routes = [
       { path: 'productos/nuevo', component: ProductForm },
       { path: 'productos/:id/editar', component: ProductForm },
       { path: 'categorias', component: CategoryAdmin },
+      { path: 'pedidos', component: OrderAdmin },
     ],
   },
 ];
