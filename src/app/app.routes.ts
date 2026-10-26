@@ -11,6 +11,8 @@ import { MyOrders } from './features/orders/my-orders/my-orders';
 import { Profile } from './features/profile/profile/profile';
 import { AdminLayout } from './features/admin/admin-layout/admin-layout';
 import { Dashboard } from './features/admin/dashboard/dashboard';
+import { ProductAdmin } from './features/admin/product-admin/product-admin';
+import { ProductForm } from './features/admin/product-form/product-form';
 import { authGuard } from './core/guards/auth-guard';
 import { adminGuard } from './core/guards/admin-guard';
 
@@ -30,6 +32,11 @@ export const routes: Routes = [
     path: 'admin',
     component: AdminLayout,
     canActivate: [adminGuard],
-    children: [{ path: '', component: Dashboard }],
+    children: [
+      { path: '', component: Dashboard },
+      { path: 'productos', component: ProductAdmin },
+      { path: 'productos/nuevo', component: ProductForm },
+      { path: 'productos/:id/editar', component: ProductForm },
+    ],
   },
 ];

@@ -1,0 +1,46 @@
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h2 class="mb-0">Productos</h2>
+  <a routerLink="/admin/productos/nuevo" class="btn btn-primary">
+    <i class="bi bi-plus-lg"></i> Nuevo producto
+  </a>
+</div>
+
+<div class="table-responsive">
+  <table class="table table-hover align-middle">
+    <thead>
+      <tr>
+        <th>Imagen</th>
+        <th>Nombre</th>
+        <th>Categoría</th>
+        <th>Precio</th>
+        <th>Stock</th>
+        <th class="text-end">Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (p of productService.products(); track p.id) {
+        <tr>
+          <td><img [src]="p.imageUrl" [alt]="p.name" width="50" height="50" class="rounded" style="object-fit: cover" /></td>
+          <td class="fw-semibold">{{ p.name }}</td>
+          <td>{{ p.category }}</td>
+          <td>{{ p.price | currency: 'GTQ' : 'Q' }}</td>
+          <td>
+            @if (p.stock > 0) {
+              {{ p.stock }}
+            } @else {
+              <span class="badge bg-danger">Agotado</span>
+            }
+          </td>
+          <td class="text-end">
+            <a [routerLink]="['/admin/productos', p.id, 'editar']" class="btn btn-outline-primary btn-sm me-1">
+              <i class="bi bi-pencil"></i>
+            </a>
+            <button class="btn btn-outline-danger btn-sm" (click)="remove(p.id, p.name)">
+              <i class="bi bi-trash"></i>
+            </button>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>

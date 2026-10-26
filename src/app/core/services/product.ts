@@ -1,11 +1,11 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { Product } from '../models/product';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ProductService {
-  private products: Product[] = [
+  private _products = signal<Product[]>([
     {
       id: 1,
       name: 'Camiseta básica',
@@ -36,13 +36,30 @@ export class ProductService {
       stock: 0,
       colors: ['Negro', 'Gris'],
     },
-  ];
+  ]);
+
+  products = this._products.asReadonly();
 
   getAll(): Product[] {
-    return this.products;
+    return this._products();
   }
 
   getById(id: number): Product | undefined {
-    return this.products.find((p) => p.id === id);
+    return this._products().find((p) => p.id === id);
+  }
+
+  create(data: Omit<Product, 'id'>): Product {
+    const nextId = Math.max(0, ...this._products().map((p) => p.id)) + 1;
+    const product: Product = { ...data, id: nextId };
+    this._products.set([...this._products(), product]);
+    return product;
+  }
+
+  update(id: number, data: Omit<Product, 'id'>) {
+    this._products.set(this._products().map((p) => (p.id === id ? { ...data, id } : p)));
+  }
+
+  delete(id: number) {
+    this._products.set(this._products().filter((p) => p.id !== id));
   }
 }
