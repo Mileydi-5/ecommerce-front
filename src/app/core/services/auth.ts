@@ -1,4 +1,5 @@
-import { Injectable, computed, signal } from '@angular/core';
+import { Injectable, computed, effect, signal } from '@angular/core';
+import { loadStored, saveStored } from '../storage';
 
 export type Role = 'cliente' | 'administrador';
 
@@ -13,15 +14,17 @@ interface StoredUser extends User {
   password: string;
 }
 
+const DEFAULT_USERS: StoredUser[] = [
+  { id: 1, name: 'Cliente Demo', email: 'cliente@demo.com', password: '123456', role: 'cliente' },
+  { id: 2, name: 'Admin Demo', email: 'admin@demo.com', password: 'admin123', role: 'administrador' },
+];
+
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  // Usuarios de prueba (se reemplazan por el API más adelante)
-  private _users = signal<StoredUser[]>([
-    { id: 1, name: 'Cliente Demo', email: 'cliente@demo.com', password: '123456', role: 'cliente' },
-    { id: 2, name: 'Admin Demo', email: 'admin@demo.com', password: 'admin123', role: 'administrador' },
-  ]);
+  // Usuarios de prueba guardados en localStorage (se reemplazan por el API más adelante)
+  private _users = signal<StoredUser[]>(loadStored('shop_users', DEFAULT_USERS));
 
   // Lista pública sin contraseñas, para el panel de administración
   users = computed<User[]>(() =>
@@ -33,6 +36,10 @@ export class AuthService {
   user = this._user.asReadonly();
   isLoggedIn = computed(() => this._user() !== null);
   isAdmin = computed(() => this._user()?.role === 'administrador');
+
+  constructor() {
+    effect(() => saveStored('shop_users', this._users()));
+  }
 
   login(email: string, password: string): boolean {
     const found = this._users().find((u) => u.email === email && u.password === password);
@@ -50,6 +57,12 @@ export class AuthService {
     const nextId = Math.max(0, ...this._users().map((u) => u.id)) + 1;
     this._users.set([...this._users(), { id: nextId, name, email, password, role }]);
     return this.login(email, password);
+  }
+
+  resetPassword(email: string, password: string): boolean {
+    if (!this._users().some((u) => u.email === email)) return false;
+    this._users.set(this._users().map((u) => (u.email === email ? { ...u, password } : u)));
+    return true;
   }
 
   logout() {

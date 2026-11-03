@@ -4,6 +4,7 @@ import { ProductDetail } from './features/catalog/product-detail/product-detail'
 import { Login } from './features/auth/login/login';
 import { Register } from './features/auth/register/register';
 import { ForgotPassword } from './features/auth/forgot-password/forgot-password';
+import { ResetPassword } from './features/auth/reset-password/reset-password';
 import { Cart } from './features/cart/cart/cart';
 import { Checkout } from './features/checkout/checkout/checkout';
 import { OrderSuccess } from './features/checkout/order-success/order-success';
@@ -27,6 +28,7 @@ export const routes: Routes = [
   { path: 'login', component: Login },
   { path: 'registro', component: Register },
   { path: 'recuperar', component: ForgotPassword },
+  { path: 'restablecer', component: ResetPassword },
   { path: 'carrito', component: Cart },
   { path: 'checkout', component: Checkout, canActivate: [authGuard] },
   { path: 'pedido-confirmado/:id', component: OrderSuccess, canActivate: [authGuard] },

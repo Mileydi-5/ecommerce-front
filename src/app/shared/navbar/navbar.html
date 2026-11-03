@@ -16,7 +16,12 @@
             <i class="bi bi-gear"></i> Administración
           </a>
         }
-        <a class="btn btn-outline-light" routerLink="/mis-pedidos">Mis pedidos</a>
+        <a class="btn btn-outline-light" routerLink="/mis-pedidos">
+          Mis pedidos
+          @if (unseen() > 0) {
+            <span class="badge rounded-pill bg-danger ms-1">{{ unseen() }}</span>
+          }
+        </a>
         <a class="btn btn-outline-light" routerLink="/perfil">
           <i class="bi bi-person"></i> {{ auth.user()?.name }}
         </a>

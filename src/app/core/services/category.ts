@@ -1,4 +1,5 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, effect, signal } from '@angular/core';
+import { loadStored, saveStored } from '../storage';
 
 export interface Category {
   id: number;
@@ -6,17 +7,23 @@ export interface Category {
   subcategories: string[];
 }
 
+const DEFAULT_CATEGORIES: Category[] = [
+  { id: 1, name: 'Ropa', subcategories: ['Camisetas', 'Pantalones'] },
+  { id: 2, name: 'Electrónica', subcategories: ['Audio', 'Computación'] },
+  { id: 3, name: 'Accesorios', subcategories: ['Bolsos', 'Gorras'] },
+];
+
 @Injectable({
   providedIn: 'root',
 })
 export class CategoryService {
-  private _categories = signal<Category[]>([
-    { id: 1, name: 'Ropa', subcategories: ['Camisetas', 'Pantalones'] },
-    { id: 2, name: 'Electrónica', subcategories: ['Audio', 'Computación'] },
-    { id: 3, name: 'Accesorios', subcategories: ['Bolsos', 'Gorras'] },
-  ]);
+  private _categories = signal<Category[]>(loadStored('shop_categories', DEFAULT_CATEGORIES));
 
   categories = this._categories.asReadonly();
+
+  constructor() {
+    effect(() => saveStored('shop_categories', this._categories()));
+  }
 
   create(name: string, subcategories: string[]) {
     const nextId = Math.max(0, ...this._categories().map((c) => c.id)) + 1;

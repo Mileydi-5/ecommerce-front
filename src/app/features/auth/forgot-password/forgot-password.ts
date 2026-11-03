@@ -12,6 +12,7 @@ export class ForgotPassword {
   private fb = inject(FormBuilder);
 
   sent = false;
+  sentEmail = '';
 
   form = this.fb.nonNullable.group({
     email: ['', [Validators.required, Validators.email]],
@@ -23,6 +24,7 @@ export class ForgotPassword {
       return;
     }
     // Aquí después se llamará al API para enviar el correo de recuperación
+    this.sentEmail = this.form.getRawValue().email;
     this.sent = true;
   }
 }

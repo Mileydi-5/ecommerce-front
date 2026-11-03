@@ -1,6 +1,7 @@
-import { Injectable, computed, inject, signal } from '@angular/core';
+import { Injectable, computed, effect, inject, signal } from '@angular/core';
 import { Product } from '../models/product';
 import { Coupon, CouponService } from './coupon';
+import { loadStored, saveStored } from '../storage';
 
 export interface CartItem {
   product: Product;
@@ -13,8 +14,8 @@ export interface CartItem {
 export class CartService {
   private couponService = inject(CouponService);
 
-  private _items = signal<CartItem[]>([]);
-  private _coupon = signal<Coupon | null>(null);
+  private _items = signal<CartItem[]>(loadStored('shop_cart', []));
+  private _coupon = signal<Coupon | null>(loadStored('shop_cart_coupon', null));
 
   items = this._items.asReadonly();
   coupon = this._coupon.asReadonly();
@@ -35,6 +36,11 @@ export class CartService {
   });
 
   total = computed(() => this.subtotal() - this.discount());
+
+  constructor() {
+    effect(() => saveStored('shop_cart', this._items()));
+    effect(() => saveStored('shop_cart_coupon', this._coupon()));
+  }
 
   add(product: Product, quantity = 1) {
     const current = this._items();

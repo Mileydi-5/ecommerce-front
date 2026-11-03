@@ -1,4 +1,5 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, effect, signal } from '@angular/core';
+import { loadStored, saveStored } from '../storage';
 
 export type CouponType = 'porcentaje' | 'monto';
 
@@ -10,16 +11,22 @@ export interface Coupon {
   active: boolean;
 }
 
+const DEFAULT_COUPONS: Coupon[] = [
+  { id: 1, code: 'BIENVENIDO10', type: 'porcentaje', value: 10, active: true },
+  { id: 2, code: 'AHORRA50', type: 'monto', value: 50, active: true },
+];
+
 @Injectable({
   providedIn: 'root',
 })
 export class CouponService {
-  private _coupons = signal<Coupon[]>([
-    { id: 1, code: 'BIENVENIDO10', type: 'porcentaje', value: 10, active: true },
-    { id: 2, code: 'AHORRA50', type: 'monto', value: 50, active: true },
-  ]);
+  private _coupons = signal<Coupon[]>(loadStored('shop_coupons', DEFAULT_COUPONS));
 
   coupons = this._coupons.asReadonly();
+
+  constructor() {
+    effect(() => saveStored('shop_coupons', this._coupons()));
+  }
 
   create(data: Omit<Coupon, 'id'>) {
     const nextId = Math.max(0, ...this._coupons().map((c) => c.id)) + 1;

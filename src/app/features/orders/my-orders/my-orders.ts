@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { CurrencyPipe, DatePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/services/auth';
@@ -14,7 +14,16 @@ export class MyOrders {
   private auth = inject(AuthService);
   private orderService = inject(OrderService);
 
-  orders = this.orderService.getByUser(this.auth.user()!.email);
+  private email = this.auth.user()!.email;
+
+  orders = computed(() => this.orderService.orders().filter((o) => o.userEmail === this.email));
+
+  // Pedidos cuyo estado cambió desde la última vez que el cliente entró
+  changed = this.orders().filter((o) => o.status !== o.seenStatus);
+
+  constructor() {
+    this.orderService.markSeen(this.email);
+  }
 
   badgeClass(status: OrderStatus): string {
     switch (status) {
