@@ -3,12 +3,43 @@
 @if (product) {
   <div class="row g-4">
     <div class="col-md-6">
-      <img [src]="product.imageUrl" [alt]="product.name" class="img-fluid rounded shadow-sm" />
+      <img [src]="selectedImage()" [alt]="product.name" class="img-fluid rounded shadow-sm" />
+
+      @if (images.length > 1) {
+        <div class="d-flex gap-2 mt-3 flex-wrap">
+          @for (img of images; track img) {
+            <img
+              [src]="img"
+              [alt]="product.name"
+              class="rounded border"
+              [class.border-primary]="selectedImage() === img"
+              [class.border-2]="selectedImage() === img"
+              style="width: 70px; height: 70px; object-fit: cover; cursor: pointer"
+              (click)="selectedImage.set(img)"
+            />
+          }
+        </div>
+      }
     </div>
+
     <div class="col-md-6">
-      <span class="badge bg-secondary mb-2">{{ product.category }}</span>
+      <div class="mb-2">
+        <span class="badge bg-secondary">{{ product.category }}</span>
+        @if (product.subcategory) {
+          <span class="badge bg-light text-dark border ms-1">{{ product.subcategory }}</span>
+        }
+      </div>
       <h2>{{ product.name }}</h2>
       <p class="text-muted">{{ product.description }}</p>
+
+      @if (product.tags) {
+        <p>
+          @for (t of product.tags; track t) {
+            <span class="badge rounded-pill text-bg-success me-1">#{{ t }}</span>
+          }
+        </p>
+      }
+
       <p class="fs-3 fw-bold">{{ product.price | currency: 'GTQ' : 'Q' }}</p>
 
       @if (product.sizes) {

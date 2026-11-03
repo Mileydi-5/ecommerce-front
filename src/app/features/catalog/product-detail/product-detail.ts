@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { CurrencyPipe } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { ProductService } from '../../../core/services/product';
@@ -16,6 +16,8 @@ export class ProductDetail {
   private cart = inject(CartService);
 
   product = this.productService.getById(Number(this.route.snapshot.paramMap.get('id')));
+  images = this.product ? [this.product.imageUrl, ...(this.product.images ?? [])] : [];
+  selectedImage = signal(this.product?.imageUrl ?? '');
   added = false;
 
   addToCart() {

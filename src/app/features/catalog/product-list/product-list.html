@@ -48,9 +48,9 @@
   </div>
 </div>
 
-<!-- Filtro por categoría -->
-<div class="d-flex flex-wrap gap-2 mb-3">
-  <button class="btn btn-sm" [class.btn-dark]="category() === ''" [class.btn-outline-dark]="category() !== ''" (click)="category.set('')">
+<!-- Categorías -->
+<div class="d-flex flex-wrap gap-2 mb-2">
+  <button class="btn btn-sm" [class.btn-dark]="category() === ''" [class.btn-outline-dark]="category() !== ''" (click)="selectCategory('')">
     Todas
   </button>
   @for (c of categoryService.categories(); track c.id) {
@@ -58,16 +58,50 @@
       class="btn btn-sm"
       [class.btn-dark]="category() === c.name"
       [class.btn-outline-dark]="category() !== c.name"
-      (click)="category.set(c.name)"
+      (click)="selectCategory(c.name)"
     >
       {{ c.name }}
     </button>
   }
 </div>
 
+<!-- Subcategorías (solo si hay una categoría elegida) -->
+@if (subcategoryOptions().length > 0) {
+  <div class="d-flex flex-wrap gap-2 mb-2 ps-3">
+    <span class="small text-muted align-self-center">Subcategoría:</span>
+    @for (s of subcategoryOptions(); track s) {
+      <button
+        class="btn btn-sm"
+        [class.btn-primary]="subcategory() === s"
+        [class.btn-outline-primary]="subcategory() !== s"
+        (click)="toggleSubcategory(s)"
+      >
+        {{ s }}
+      </button>
+    }
+  </div>
+}
+
+<!-- Etiquetas -->
+@if (allTags().length > 0) {
+  <div class="d-flex flex-wrap gap-2 mb-3">
+    <span class="small text-muted align-self-center">Etiquetas:</span>
+    @for (t of allTags(); track t) {
+      <button
+        class="btn btn-sm rounded-pill"
+        [class.btn-success]="tag() === t"
+        [class.btn-outline-success]="tag() !== t"
+        (click)="toggleTag(t)"
+      >
+        #{{ t }}
+      </button>
+    }
+  </div>
+}
+
 <p class="text-muted small">
   {{ filtered().length }} producto(s) encontrado(s)
-  @if (search() || category() || onlyAvailable() || sort() !== 'none') {
+  @if (hasFilters()) {
     · <a href="javascript:void(0)" (click)="clearAll()">Limpiar filtros</a>
   }
 </p>
@@ -82,7 +116,12 @@
       <div class="card h-100 shadow-sm">
         <img [src]="p.imageUrl" class="card-img-top" [alt]="p.name" />
         <div class="card-body d-flex flex-column">
-          <span class="badge bg-secondary align-self-start mb-2">{{ p.category }}</span>
+          <div class="mb-2">
+            <span class="badge bg-secondary">{{ p.category }}</span>
+            @if (p.subcategory) {
+              <span class="badge bg-light text-dark border ms-1">{{ p.subcategory }}</span>
+            }
+          </div>
           <h5 class="card-title">
             <a [routerLink]="['/productos', p.id]" class="text-decoration-none text-dark stretched-link">{{ p.name }}</a>
           </h5>

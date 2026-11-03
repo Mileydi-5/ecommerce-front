@@ -1,4 +1,5 @@
-import { Component, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ProductService } from '../../../core/services/product';
@@ -25,10 +26,19 @@ export class ProductForm {
     price: [0, [Validators.required, Validators.min(0.01)]],
     stock: [0, [Validators.required, Validators.min(0)]],
     category: ['', Validators.required],
+    subcategory: [''],
+    tags: [''],
     imageUrl: ['images/camiseta.jpg', Validators.required],
+    images: [''],
     sizes: [''],
     colors: [''],
   });
+
+  private selectedCategory = toSignal(this.form.controls.category.valueChanges, { initialValue: '' });
+
+  subcategoryOptions = computed(
+    () => this.categoryService.categories().find((c) => c.name === this.selectedCategory())?.subcategories ?? []
+  );
 
   constructor() {
     if (this.id !== null) {
@@ -36,6 +46,9 @@ export class ProductForm {
       if (p) {
         this.form.patchValue({
           ...p,
+          subcategory: p.subcategory ?? '',
+          tags: p.tags?.join(', ') ?? '',
+          images: p.images?.join(', ') ?? '',
           sizes: p.sizes?.join(', ') ?? '',
           colors: p.colors?.join(', ') ?? '',
         });
@@ -55,8 +68,15 @@ export class ProductForm {
       this.form.markAllAsTouched();
       return;
     }
-    const { sizes, colors, ...rest } = this.form.getRawValue();
-    const data = { ...rest, sizes: this.toList(sizes), colors: this.toList(colors) };
+    const { sizes, colors, tags, images, subcategory, ...rest } = this.form.getRawValue();
+    const data = {
+      ...rest,
+      subcategory: subcategory || undefined,
+      tags: this.toList(tags),
+      images: this.toList(images),
+      sizes: this.toList(sizes),
+      colors: this.toList(colors),
+    };
 
     if (this.id !== null) {
       this.productService.update(this.id, data);

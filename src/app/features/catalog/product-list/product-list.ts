@@ -17,6 +17,8 @@ export class ProductList {
 
   search = signal('');
   category = signal('');
+  subcategory = signal('');
+  tag = signal('');
   onlyAvailable = signal(false);
   sort = signal<'none' | 'asc' | 'desc'>('none');
   showSuggestions = signal(false);
@@ -26,6 +28,15 @@ export class ProductList {
     return text.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
   }
 
+  subcategoryOptions = computed(
+    () => this.categoryService.categories().find((c) => c.name === this.category())?.subcategories ?? []
+  );
+
+  allTags = computed(() => {
+    const tags = this.productService.products().flatMap((p) => p.tags ?? []);
+    return [...new Set(tags)].sort();
+  });
+
   filtered = computed(() => {
     const term = this.normalize(this.search());
 
@@ -33,10 +44,13 @@ export class ProductList {
       const matchText =
         !term ||
         this.normalize(p.name).includes(term) ||
-        this.normalize(p.description).includes(term);
+        this.normalize(p.description).includes(term) ||
+        (p.tags ?? []).some((t) => this.normalize(t).includes(term));
       const matchCategory = !this.category() || p.category === this.category();
+      const matchSub = !this.subcategory() || p.subcategory === this.subcategory();
+      const matchTag = !this.tag() || (p.tags ?? []).includes(this.tag());
       const matchStock = !this.onlyAvailable() || p.stock > 0;
-      return matchText && matchCategory && matchStock;
+      return matchText && matchCategory && matchSub && matchTag && matchStock;
     });
 
     if (this.sort() === 'asc') return [...list].sort((a, b) => a.price - b.price);
@@ -53,6 +67,16 @@ export class ProductList {
       .slice(0, 5);
   });
 
+  hasFilters = computed(
+    () =>
+      !!this.search() ||
+      !!this.category() ||
+      !!this.subcategory() ||
+      !!this.tag() ||
+      this.onlyAvailable() ||
+      this.sort() !== 'none'
+  );
+
   onSearch(event: Event) {
     this.search.set((event.target as HTMLInputElement).value);
     this.showSuggestions.set(true);
@@ -64,6 +88,19 @@ export class ProductList {
 
   onAvailable(event: Event) {
     this.onlyAvailable.set((event.target as HTMLInputElement).checked);
+  }
+
+  selectCategory(name: string) {
+    this.category.set(name);
+    this.subcategory.set('');
+  }
+
+  toggleSubcategory(name: string) {
+    this.subcategory.set(this.subcategory() === name ? '' : name);
+  }
+
+  toggleTag(name: string) {
+    this.tag.set(this.tag() === name ? '' : name);
   }
 
   goTo(id: number) {
@@ -79,6 +116,8 @@ export class ProductList {
   clearAll() {
     this.search.set('');
     this.category.set('');
+    this.subcategory.set('');
+    this.tag.set('');
     this.onlyAvailable.set(false);
     this.sort.set('none');
   }
