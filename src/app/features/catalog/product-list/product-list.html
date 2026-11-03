@@ -1,7 +1,83 @@
 <h2 class="mb-4">Catálogo de productos</h2>
 
+<!-- Búsqueda con autocompletado -->
+<div class="row g-3 mb-3">
+  <div class="col-lg-6 position-relative">
+    <div class="input-group">
+      <span class="input-group-text"><i class="bi bi-search"></i></span>
+      <input
+        type="text"
+        class="form-control"
+        placeholder="Buscar productos..."
+        [value]="search()"
+        (input)="onSearch($event)"
+        (focus)="showSuggestions.set(true)"
+        (blur)="showSuggestions.set(false)"
+      />
+      @if (search()) {
+        <button class="btn btn-outline-secondary" type="button" (click)="clearSearch()">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      }
+    </div>
+
+    @if (showSuggestions() && suggestions().length > 0) {
+      <ul class="list-group position-absolute w-100 shadow" style="z-index: 1000">
+        @for (s of suggestions(); track s.id) {
+          <li class="list-group-item list-group-item-action" style="cursor: pointer" (mousedown)="goTo(s.id)">
+            {{ s.name }} <span class="text-muted small">· {{ s.category }}</span>
+          </li>
+        }
+      </ul>
+    }
+  </div>
+
+  <div class="col-lg-3 col-sm-6">
+    <select class="form-select" [value]="sort()" (change)="onSort($event)">
+      <option value="none">Ordenar por...</option>
+      <option value="asc">Precio: menor a mayor</option>
+      <option value="desc">Precio: mayor a menor</option>
+    </select>
+  </div>
+
+  <div class="col-lg-3 col-sm-6 d-flex align-items-center">
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" id="onlyAvailable" [checked]="onlyAvailable()" (change)="onAvailable($event)" />
+      <label class="form-check-label" for="onlyAvailable">Solo disponibles</label>
+    </div>
+  </div>
+</div>
+
+<!-- Filtro por categoría -->
+<div class="d-flex flex-wrap gap-2 mb-3">
+  <button class="btn btn-sm" [class.btn-dark]="category() === ''" [class.btn-outline-dark]="category() !== ''" (click)="category.set('')">
+    Todas
+  </button>
+  @for (c of categoryService.categories(); track c.id) {
+    <button
+      class="btn btn-sm"
+      [class.btn-dark]="category() === c.name"
+      [class.btn-outline-dark]="category() !== c.name"
+      (click)="category.set(c.name)"
+    >
+      {{ c.name }}
+    </button>
+  }
+</div>
+
+<p class="text-muted small">
+  {{ filtered().length }} producto(s) encontrado(s)
+  @if (search() || category() || onlyAvailable() || sort() !== 'none') {
+    · <a href="javascript:void(0)" (click)="clearAll()">Limpiar filtros</a>
+  }
+</p>
+
+@if (filtered().length === 0) {
+  <div class="alert alert-warning">No hay productos que coincidan con tu búsqueda.</div>
+}
+
 <div class="row g-4">
-  @for (p of products; track p.id) {
+  @for (p of filtered(); track p.id) {
     <div class="col-12 col-sm-6 col-lg-4">
       <div class="card h-100 shadow-sm">
         <img [src]="p.imageUrl" class="card-img-top" [alt]="p.name" />
